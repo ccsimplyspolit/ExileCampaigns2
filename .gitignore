@@ -1,0 +1,33 @@
+# Build output
+bin/
+obj/
+*.dll
+*.pdb
+*.exe
+*.cache
+Errors.txt
+
+# VS / Rider
+.vs/
+.idea/
+*.user
+*.suo
+*.rsuser
+*.DotSettings.user
+
+# NuGet
+*.nupkg
+packages/
+.nuget/
+
+# Tests and tools
+tests/
+tools/
+
+# Claude / AI / Copilot
+.claude/
+.cursorrules
+.aider*
+.copilot/
+.github/copilot-instructions.md
+*.claude.json
