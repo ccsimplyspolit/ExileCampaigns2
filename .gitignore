@@ -20,9 +20,11 @@ Errors.txt
 packages/
 .nuget/
 
-# Tests and tools
+# Tests and tools/docs
 tests/
 tools/
+docs/
+harvest/
 
 # Claude / AI / Copilot
 .claude/
@@ -31,3 +33,8 @@ tools/
 .copilot/
 .github/copilot-instructions.md
 *.claude.json
+
+.superpowers/
+*.original.md
+CLAUDE.md
+

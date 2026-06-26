@@ -233,6 +233,40 @@ public sealed class RouteRepository
         return -1;
     }
 
+    // how many visible steps ahead the quest-flag catch-up may scan and jump.
+    private const int FlagLookaheadWindow = 8;
+
+    // catch-up advance: when a quest flag for a step ahead has already flipped (player skipped content or
+    // flags tripped out of order), jump to the proper step. scans the next visible steps within the window,
+    // takes the furthest whose QuestFlag objective is satisfied, and lands on the first visible step after it.
+    // forward-only; returns true when the cursor moved.
+    public bool AdvanceToSatisfiedFlagAhead(Func<Pattern, bool> isFlagTrue)
+    {
+        if (isFlagTrue == null || _steps.Count == 0 || Current < 0 || Current >= _steps.Count) return false;
+
+        int floor = -1;   // furthest upcoming visible step proven done by a satisfied quest flag
+        int seen = 0;
+        for (int i = Current + 1; i < _steps.Count && seen < FlagLookaheadWindow; i++)
+        {
+            if (IsSkippable(i)) continue;   // headers + hidden optionals are never landing spots
+            seen++;
+            var m = _steps[i].Model;
+            if (m?.Objectives == null) continue;
+            foreach (var o in m.Objectives)
+                if (o.Type == ObjectiveType.QuestFlag && o.Flag != null && isFlagTrue(o.Flag)) { floor = i; break; }
+        }
+        if (floor < 0) return false;
+
+        int target = floor;
+        for (int i = floor + 1; i < _steps.Count; i++)
+            if (!IsSkippable(i)) { target = i; break; }
+        if (target <= Current) return false;
+
+        Current = target;
+        SnapForwardVisible();
+        return true;
+    }
+
     // read-only: does any step in `area`'s block satisfy the predicate? doesn't mutate position.
     public bool AnyStepInArea(string area, Func<string, bool> matches)
     {

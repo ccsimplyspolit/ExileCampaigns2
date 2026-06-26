@@ -26,6 +26,8 @@ public partial class ExileCampaigns
             Toggle("Auto-advance", Settings.AutoAdvance,
                 "Advance the displayed step automatically when you enter the next zone");
             Toggle("Show optional steps", Settings.ShowOptional, "Include steps marked (Opt) from the route");
+            Button(Settings.SyncToCharacter, "Sync tracker to character",
+                "Jump the tracker to your character's real progress (quest flags + current area)");
             ImGui.EndTabItem();
         }
 
@@ -154,8 +156,6 @@ public partial class ExileCampaigns
             ImGui.SeparatorText("Route editor & routes");
             Toggle("Show route editor", Settings.Editor.Enable,
                 "Show the in-game route editor panel (overlays must be unlocked to drag)");
-            Button(Settings.SyncToCharacter, "Sync tracker to character",
-                "Jump the tracker to your character's real progress (quest flags + current area)");
             Button(Settings.ReloadRoutes, "Reload routes",
                 "Re-read route files from disk (bundled, or your override under the config folder)");
 

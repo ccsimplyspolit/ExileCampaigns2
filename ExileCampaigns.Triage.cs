@@ -96,6 +96,7 @@ public partial class ExileCampaigns
 
             DrawRadarPathsPanel(curId, hasStep);
             DrawRecentFlagsPanel(curId, hasStep);
+            DrawNearbyEntitiesPanel(curId, hasStep);
 
             DrawRenamePopup();
         }
@@ -165,25 +166,151 @@ public partial class ExileCampaigns
         ImGui.EndChild();
     }
 
+    // the editor-selected objective on `step`, seeding a blank one when the step has none so quick-edit
+    // add/set actions never no-op on an empty step. returns the working list + chosen index.
+    private static (List<Objective> Objs, int Idx) SelectedObjectiveList(RouteStep step, int selIndex)
+    {
+        var objs = step.Objectives.ToList();
+        if (objs.Count == 0) objs.Add(RouteEditing.BlankObjective());
+        int idx = System.Math.Clamp(selIndex, 0, objs.Count - 1);
+        return (objs, idx);
+    }
+
     // append or replace the current objective's Paths with a Radar pick
     private void AddRadarPathToObjective(string curId, RadarTargetsFile.Pick pick, bool replace)
     {
         if (_routeStore == null) return;
         var step = _routeStore.Steps.FirstOrDefault(s => s.Id == curId);
-        if (step == null || step.Objectives.Count == 0) return;
-        int objIdx = System.Math.Clamp(_editorSelectedObjIndex, 0, step.Objectives.Count - 1);
-        var o = step.Objectives[objIdx];
+        if (step == null) return;
+        var (objs, objIdx) = SelectedObjectiveList(step, _editorSelectedObjIndex);
+        var o = objs[objIdx];
         var newPath = new GuidePath(new Target(pick.Kind, new Pattern(pick.Match), pick.MatchBy));
         var updated = replace
             ? o with { Paths = new System.Collections.Generic.List<GuidePath> { newPath } }
             : RouteEditing.AddPath(o, newPath);
-        var objs = step.Objectives.ToList();
         objs[objIdx] = updated;
         _routeStore.Update(step with { Objectives = objs });
         SaveUserRoute();
         ReloadRouteFromStore(curId);
         _bufForStepId = null;
         ShowToast(replace ? $"Path set: {Trunc(pick.Label, 22)}" : $"Path added: {Trunc(pick.Label, 20)}");
+    }
+
+    // --- nearby-entities quick guidance -------------------------------------------------------------------
+
+    // live nearby entities with one-click writes to the editor's selected objective. Set/Add the indicator +
+    // minimap icon, Path+/Path= the Paths, Prox makes it a Proximity gate at your current distance plus 20%.
+    private void DrawNearbyEntitiesPanel(string? curId, bool hasStep)
+    {
+        ImGui.Separator();
+        ImGui.TextDisabled("Nearby entities");
+        ImGui.SameLine();
+        HelpMarker("Live entities near you. Set replaces the current objective's indicator + minimap icon with "
+            + "this entity; Add appends them. Path+ appends a Path to this entity; Path= replaces all Paths. "
+            + "Prox makes the objective a Proximity gate on this entity, radius = your current distance plus 20%. "
+            + "Matched by metadata path.");
+
+        ImGui.BeginChild("##ec_triage_ents", new Vector2(0f, 118f), ImGuiChildFlags.Border);
+        var ents = NearbyEntitiesList(200f, 15);
+        if (ents.Count == 0)
+        {
+            ImGui.TextDisabled("(no entities nearby)");
+        }
+        else
+        {
+            if (!hasStep) ImGui.BeginDisabled();
+            for (int i = 0; i < ents.Count; i++)
+            {
+                var (path, name, dist, _) = ents[i];
+                bool set = ImGui.SmallButton($"Set##nea_s{i}");
+                ImGui.SameLine();
+                bool add = ImGui.SmallButton($"Add##nea_a{i}");
+                ImGui.SameLine();
+                bool pathAdd = ImGui.SmallButton($"Path+##nea_p{i}");
+                ImGui.SameLine();
+                bool pathSet = ImGui.SmallButton($"Path=##nea_ps{i}");
+                ImGui.SameLine();
+                bool prox = ImGui.SmallButton($"Prox##nea_px{i}");
+                ImGui.SameLine();
+                ImGui.TextUnformatted(string.IsNullOrEmpty(name) ? PathLeaf(path) : $"{name} ({dist})");
+                if (set && curId != null) SetEntityGuidance(curId, path, name, replace: true);
+                if (add && curId != null) SetEntityGuidance(curId, path, name, replace: false);
+                if (pathAdd && curId != null) AddEntityPathToObjective(curId, path, name, replace: false);
+                if (pathSet && curId != null) AddEntityPathToObjective(curId, path, name, replace: true);
+                if (prox && curId != null) SetProximityGuidance(curId, path, name, dist);
+            }
+            if (!hasStep) ImGui.EndDisabled();
+        }
+        ImGui.EndChild();
+    }
+
+    // write the picked entity into the current objective's indicator + minimap icon. Set = sole entry on each
+    // channel, Add = append. matched by path, default sprite for the icon
+    private void SetEntityGuidance(string curId, string path, string name, bool replace)
+    {
+        if (_routeStore == null) return;
+        var step = _routeStore.Steps.FirstOrDefault(s => s.Id == curId);
+        if (step == null) return;
+        var (objs, objIdx) = SelectedObjectiveList(step, _editorSelectedObjIndex);
+        var o = objs[objIdx];
+
+        var t = new Target(TargetKind.Entity, new Pattern(path), MatchKind.Path, false);
+        var updated = replace
+            ? o with { Indicators = new List<Indicator> { new(t) }, MinimapIcons = new List<MinimapIcon> { NewMinimapIcon(t) } }
+            : RouteEditing.AddMinimapIcon(RouteEditing.AddIndicator(o, new Indicator(t)), NewMinimapIcon(t));
+
+        objs[objIdx] = updated;
+        _routeStore.Update(step with { Objectives = objs });
+        SaveUserRoute();
+        ReloadRouteFromStore(curId);
+        _bufForStepId = null;
+        var lbl = string.IsNullOrEmpty(name) ? PathLeaf(path) : name;
+        ShowToast(replace ? $"Indicator+icon set: {Trunc(lbl, 20)}" : $"Indicator+icon added: {Trunc(lbl, 20)}");
+    }
+
+    // write the picked entity into the current objective's Paths. Path= = sole path, Path+ = append. matched by path
+    private void AddEntityPathToObjective(string curId, string path, string name, bool replace)
+    {
+        if (_routeStore == null) return;
+        var step = _routeStore.Steps.FirstOrDefault(s => s.Id == curId);
+        if (step == null) return;
+        var (objs, objIdx) = SelectedObjectiveList(step, _editorSelectedObjIndex);
+        var o = objs[objIdx];
+        var newPath = new GuidePath(new Target(TargetKind.Entity, new Pattern(path), MatchKind.Path));
+        var updated = replace
+            ? o with { Paths = new System.Collections.Generic.List<GuidePath> { newPath } }
+            : RouteEditing.AddPath(o, newPath);
+        objs[objIdx] = updated;
+        _routeStore.Update(step with { Objectives = objs });
+        SaveUserRoute();
+        ReloadRouteFromStore(curId);
+        _bufForStepId = null;
+        var lbl = string.IsNullOrEmpty(name) ? PathLeaf(path) : name;
+        ShowToast(replace ? $"Path set: {Trunc(lbl, 22)}" : $"Path added: {Trunc(lbl, 20)}");
+    }
+
+    // turn the current objective into a Proximity gate on the picked entity, radius = current distance + 20%
+    private void SetProximityGuidance(string curId, string path, string name, int dist)
+    {
+        if (_routeStore == null) return;
+        var step = _routeStore.Steps.FirstOrDefault(s => s.Id == curId);
+        if (step == null) return;
+        var (objs, objIdx) = SelectedObjectiveList(step, _editorSelectedObjIndex);
+        var o = objs[objIdx];
+
+        float radius = System.Math.Max(1f, dist * 1.2f);
+        objs[objIdx] = o with
+        {
+            Type = ObjectiveType.Proximity,
+            Entities = new List<EntityMatcher> { new(new Pattern(path), MatchKind.Path) },
+            Distance = radius,
+        };
+        _routeStore.Update(step with { Objectives = objs });
+        SaveUserRoute();
+        ReloadRouteFromStore(curId);
+        _bufForStepId = null;
+        var lbl = string.IsNullOrEmpty(name) ? PathLeaf(path) : name;
+        ShowToast($"Proximity {radius:0} set: {Trunc(lbl, 18)}");
     }
 
     // --- recent-flags quick-bind --------------------------------------------------------------------------

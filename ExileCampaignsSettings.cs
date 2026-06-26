@@ -44,10 +44,10 @@ public class PathRenderSettings
     public ToggleNode ShowPathOnMinimap { get; set; } = new ToggleNode(true);
 
     [Menu("Ground path only with map closed", "Hide the ground line while the large map is open (the minimap path covers it then)")]
-    public ToggleNode ShowGroundPathOnlyWithClosedMap { get; set; } = new ToggleNode(true);
+    public ToggleNode ShowGroundPathOnlyWithClosedMap { get; set; } = new ToggleNode(false);
 
     [Menu("Path color")]
-    public ColorNode PathColor { get; set; } = new ColorNode(Color.FromArgb(255, 80, 200, 255));
+    public ColorNode PathColor { get; set; } = new ColorNode(Color.FromArgb(132, 104, 255, 0));
 
     [Menu("Highlight shortest path", "When a step draws several paths at once, tint the shortest one a different color")]
     public ToggleNode HighlightShortest { get; set; } = new ToggleNode(true);
@@ -56,28 +56,28 @@ public class PathRenderSettings
     public ColorNode ShortestPathColor { get; set; } = new ColorNode(Color.FromArgb(255, 120, 255, 120));
 
     [Menu("Path thickness")]
-    public RangeNode<float> PathThickness { get; set; } = new RangeNode<float>(3f, 1f, 20f);
+    public RangeNode<float> PathThickness { get; set; } = new RangeNode<float>(3.5f, 1f, 20f);
 
     [Menu("Draw every Nth point", "Thin the path by drawing only every Nth grid point (higher = sparser/faster)")]
-    public RangeNode<int> DrawEveryNthSegment { get; set; } = new RangeNode<int>(2, 1, 10);
+    public RangeNode<int> DrawEveryNthSegment { get; set; } = new RangeNode<int>(1, 1, 10);
 
     [Menu("Flowing comets", "Slide comet sprites along the ground path toward the objective (in addition to / instead of the line)")]
-    public ToggleNode ShowComets { get; set; } = new ToggleNode(false);
+    public ToggleNode ShowComets { get; set; } = new ToggleNode(true);
 
     [Menu("Comets only (hide line)", "When comets are on, don't draw the solid ground line")]
-    public ToggleNode CometsOnly { get; set; } = new ToggleNode(false);
+    public ToggleNode CometsOnly { get; set; } = new ToggleNode(true);
 
     [Menu("Comet color")]
-    public ColorNode CometColor { get; set; } = new ColorNode(Color.FromArgb(255, 255, 180, 80));
+    public ColorNode CometColor { get; set; } = new ColorNode(Color.FromArgb(255, 104, 255, 0));
 
     [Menu("Comet spacing", "Grid units between comets; count scales with path length (smaller = denser)")]
-    public RangeNode<float> CometSpacing { get; set; } = new RangeNode<float>(80f, 10f, 400f);
+    public RangeNode<float> CometSpacing { get; set; } = new RangeNode<float>(60f, 10f, 400f);
 
     [Menu("Comet size", "Comet length in grid units")]
-    public RangeNode<float> CometSize { get; set; } = new RangeNode<float>(4f, 1f, 80f);
+    public RangeNode<float> CometSize { get; set; } = new RangeNode<float>(14f, 1f, 80f);
 
     [Menu("Comet speed", "Flow speed in grid units per second")]
-    public RangeNode<float> CometSpeed { get; set; } = new RangeNode<float>(40f, 5f, 300f);
+    public RangeNode<float> CometSpeed { get; set; } = new RangeNode<float>(60f, 5f, 300f);
 }
 
 // golden arrow over the step's interact target, plus the interaction auto-advance thresholds
@@ -94,7 +94,7 @@ public class InteractIndicatorSettings
     public RangeNode<float> IconSize { get; set; } = new RangeNode<float>(70f, 8f, 400f);
 
     [Menu("Bob speed", "How fast the arrow bobs up and down (0 = steady)")]
-    public RangeNode<float> BobSpeed { get; set; } = new RangeNode<float>(5f, 0f, 15f);
+    public RangeNode<float> BobSpeed { get; set; } = new RangeNode<float>(14f, 0f, 15f);
 
     [Menu("Bob distance", "How far the arrow travels up/down while bobbing, in pixels")]
     public RangeNode<float> BobDistance { get; set; } = new RangeNode<float>(20f, 0f, 100f);
@@ -117,7 +117,7 @@ public class MinimapIconSettings
     public ToggleNode Enable { get; set; } = new ToggleNode(true);
 
     [Menu("Icon size", "Icon size in pixels on the large map")]
-    public RangeNode<int> IconSize { get; set; } = new RangeNode<int>(36, 8, 128);
+    public RangeNode<int> IconSize { get; set; } = new RangeNode<int>(24, 8, 128);
 
     [Menu("Pulse current step", "Animate the icons belonging to the current objective so they stand out")]
     public ToggleNode PulseCurrent { get; set; } = new ToggleNode(true);
@@ -178,12 +178,12 @@ public class StepsOverlayStyle
     // -- Sliders --
     [Menu("Text size", "Font height in pixels")]
     public RangeNode<float> TextSize { get; set; } = new RangeNode<float>(16f, 8f, 48f);
-    [Menu("Border thickness", "0 = no border")] public RangeNode<int> BorderThickness { get; set; } = new RangeNode<int>(0, 0, 8);
-    [Menu("Padding")] public RangeNode<int> Padding { get; set; } = new RangeNode<int>(6, 0, 40);
+    [Menu("Border thickness", "0 = no border")] public RangeNode<int> BorderThickness { get; set; } = new RangeNode<int>(1, 0, 8);
+    [Menu("Padding")] public RangeNode<int> Padding { get; set; } = new RangeNode<int>(10, 0, 40);
     [Menu("Steps shown behind", "How many completed steps to show above the current one")]
     public RangeNode<int> StepsBehind { get; set; } = new RangeNode<int>(2, 0, 12);
     [Menu("Steps shown ahead", "How many upcoming steps to show below the current one")]
-    public RangeNode<int> StepsAhead { get; set; } = new RangeNode<int>(3, 0, 12);
+    public RangeNode<int> StepsAhead { get; set; } = new RangeNode<int>(9, 0, 12);
 
     // -- Hidden: set by drag-to-move / right-edge resize, persisted but not in the menu --
     [IgnoreMenu] public RangeNode<int> PosX { get; set; } = new RangeNode<int>(40, 0, 4000);
@@ -213,10 +213,10 @@ public class BannerStyle
     // -- Sliders --
     [Menu("Text size", "Font height in pixels")]
     public RangeNode<float> TextSize { get; set; } = new RangeNode<float>(28f, 8f, 96f);
-    [Menu("Border thickness", "0 = no border")] public RangeNode<int> BorderThickness { get; set; } = new RangeNode<int>(2, 0, 8);
+    [Menu("Border thickness", "0 = no border")] public RangeNode<int> BorderThickness { get; set; } = new RangeNode<int>(0, 0, 8);
     [Menu("Padding")] public RangeNode<int> Padding { get; set; } = new RangeNode<int>(12, 0, 60);
     [Menu("Duration (seconds)", "How long the banner stays on screen; it fades out over the last 0.5s")]
-    public RangeNode<float> DurationSeconds { get; set; } = new RangeNode<float>(4f, 0.5f, 15f);
+    public RangeNode<float> DurationSeconds { get; set; } = new RangeNode<float>(8f, 0.5f, 15f);
 
     // -- Hidden: set by dragging in Preview mode, persisted but not in the menu --
     [IgnoreMenu] public RangeNode<int> PosX { get; set; } = new RangeNode<int>(960, 0, 4000);
@@ -244,7 +244,7 @@ public class ToastSettings
     [Menu("Border thickness", "0 = no border")] public RangeNode<int> BorderThickness { get; set; } = new RangeNode<int>(1, 0, 8);
     [Menu("Padding")] public RangeNode<int> Padding { get; set; } = new RangeNode<int>(8, 0, 40);
     [Menu("Duration (seconds)", "How long each toast stays; it fades out over the last 0.5s")]
-    public RangeNode<float> DurationSeconds { get; set; } = new RangeNode<float>(3f, 0.5f, 15f);
+    public RangeNode<float> DurationSeconds { get; set; } = new RangeNode<float>(5f, 0.5f, 15f);
 
     // -- Hidden: set by dragging in Preview mode (centre X / top Y / wrap width), persisted but not in the menu --
     [IgnoreMenu] public RangeNode<int> PosX { get; set; } = new RangeNode<int>(960, 0, 4000);

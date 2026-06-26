@@ -727,10 +727,13 @@ public partial class ExileCampaigns
         Vector2 g11 = baseB + size * fwd - 0.5f * size * right;
         Vector2 g01 = baseB - 0.5f * size * right;
 
-        if (!ProjectGrid(g00, hd, cam, out var s00)) return;
-        if (!ProjectGrid(g10, hd, cam, out var s10)) return;
-        if (!ProjectGrid(g11, hd, cam, out var s11)) return;
-        if (!ProjectGrid(g01, hd, cam, out var s01)) return;
+        // one height for the whole quad (sampled at the comet center) so the 4 corners can't disagree and
+        // tilt the sprite frame to frame. keeps the decal planar as it rides up/down terrain.
+        float z = SampleHeight(pos.X, pos.Y, hd);
+        var s00 = ProjectGridZ(g00, z, cam);
+        var s10 = ProjectGridZ(g10, z, cam);
+        var s11 = ProjectGridZ(g11, z, cam);
+        var s01 = ProjectGridZ(g01, z, cam);
 
         // drop the comet if projection blew up (corner near/behind camera) -> giant or non-finite quad
         float e0 = Vector2.Distance(s00, s10), e1 = Vector2.Distance(s10, s11);
@@ -741,14 +744,28 @@ public partial class ExileCampaigns
         Graphics.DrawQuad(texId, s00, s10, s11, s01, color);
     }
 
-    // grid (float) -> screen, sampling terrain height at the nearest cell. false if out of bounds
-    private bool ProjectGrid(Vector2 g, float[][] hd, Camera cam, out Vector2 screen)
+    // bilinear terrain height at fractional grid coords. smooths the per-cell stepping that makes comets jiggle
+    private static float SampleHeight(float gx, float gy, float[][] hd)
     {
-        screen = default;
-        int gx = (int)MathF.Round(g.X), gy = (int)MathF.Round(g.Y);
-        if (gy < 0 || gy >= hd.Length || gx < 0 || gx >= hd[gy].Length) return false;
-        screen = cam.WorldToScreen(
-            new Vector3(g.X * GridToWorldMultiplier, g.Y * GridToWorldMultiplier, hd[gy][gx]));
-        return true;
+        int x0 = (int)MathF.Floor(gx), y0 = (int)MathF.Floor(gy);
+        float tx = gx - x0, ty = gy - y0;
+        float h00 = HeightAt(x0, y0, hd),     h10 = HeightAt(x0 + 1, y0, hd);
+        float h01 = HeightAt(x0, y0 + 1, hd), h11 = HeightAt(x0 + 1, y0 + 1, hd);
+        return Lerp(Lerp(h00, h10, tx), Lerp(h01, h11, tx), ty);
     }
+
+    // clamped cell read so edge sampling never throws
+    private static float HeightAt(int x, int y, float[][] hd)
+    {
+        if (y < 0) y = 0; else if (y >= hd.Length) y = hd.Length - 1;
+        var row = hd[y];
+        if (x < 0) x = 0; else if (x >= row.Length) x = row.Length - 1;
+        return row[x];
+    }
+
+    private static float Lerp(float a, float b, float t) => a + (b - a) * t;
+
+    // project a grid point at an explicit world height (shared comet quad z), no per-corner terrain sample
+    private Vector2 ProjectGridZ(Vector2 g, float z, Camera cam)
+        => cam.WorldToScreen(new Vector3(g.X * GridToWorldMultiplier, g.Y * GridToWorldMultiplier, z));
 }

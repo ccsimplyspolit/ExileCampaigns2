@@ -204,14 +204,18 @@ public partial class ExileCampaigns : BaseSettingsPlugin<ExileCampaignsSettings>
         var model = _route.CurrentStep?.Model;
         if (model == null) return;
         UpdateProgressTracker(model);
-        if (Guide.AdvanceEngine.IsStepComplete(model, new WorldState(this)))
+
+        var ws = new WorldState(this);
+        bool moved = false;
+        if (Guide.AdvanceEngine.IsStepComplete(model, ws)) { _route.Next(); moved = true; }
+
+        // catch up to a quest flag that already flipped for a step ahead (skipped content / out-of-order flags)
+        if (_route.AdvanceToSatisfiedFlagAhead(ws.QuestFlagSatisfied)) moved = true;
+
+        if (moved && Settings.Banner.Enable && _route.CurrentStep != null)
         {
-            _route.Next();
-            if (Settings.Banner.Enable && _route.CurrentStep != null)
-            {
-                _bannerText = _route.CurrentStep.DisplayText;
-                _bannerShownAt = DateTime.Now;
-            }
+            _bannerText = _route.CurrentStep.DisplayText;
+            _bannerShownAt = DateTime.Now;
         }
     }
 
