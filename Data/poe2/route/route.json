@@ -7907,59 +7907,103 @@
       "act": 3,
       "areaId": "g3_3",
       "areaName": "Jungle Ruins",
-      "text": "Talk to Farrow at the start -> Runes of Aldur / Runeseeker take Unlocks Unique Verisium Runeforging",
+      "text": "Talk to Farrow",
+      "note": "",
+      "optional": false,
+      "completeWhen": "Any",
+      "objectives": [
+        {
+          "type": "QuestFlag",
+          "flag": {
+            "value": "FarrowOnAllTheseApesSeen"
+          }
+        }
+      ],
+      "importFp": "fnv1a:b3cc2413"
+    },
+    {
+      "id": "da7297a36020404f9f2a64baa2b5f557",
+      "act": 3,
+      "areaId": "g3_3",
+      "areaName": "Jungle Ruins",
+      "text": "Get Waypoint",
       "note": "",
       "optional": false,
       "completeWhen": "All",
       "objectives": [
         {
-          "type": "Interact",
-          "entities": [
-            {
-              "match": {
-                "value": "Unlocks Unique Verisium Runeforging"
-              },
-              "matchBy": "Name"
-            }
-          ],
+          "type": "ActivateWaypoint"
+        }
+      ]
+    },
+    {
+      "id": "3f13637a82444eada8a563a6b2a71acb",
+      "act": 3,
+      "areaId": "g3_3",
+      "areaName": "Jungle Ruins",
+      "text": "Summon Alva",
+      "note": "[auto] area g3_3 | near: Checkpoint, Stone Altar, Summon Alva, Waypoint, Nettle Ant, Antlion Charger, Feral Primate | rooms: Metadata/Terrain/Gallows/Act3/3_3/Rooms/entrance_01.arm, Metadata/Terrain/Gallows/Act3/3_3/Rooms/Fills/FillRuins_10_VaalCubes.arm, Metadata/Terrain/Gallows/Act3/3_3/Rooms/Fills/FillRuins_07_VaalCubes.arm, Metadata/Terrain/Gallows/Act3/3_3/Rooms/Fills/FillRuins_01_VaalCubes.arm, Metadata/Terrain/Gallows/Act3/3_3/Rooms/Fills/FillRuins_20.arm | flags: IsMapOwnerOrCouchCoopPartner, FarrowOnAllTheseApesSeen, G3_2_2EntranceSeenNoCrystal, AchievementCheckWaypoints, JungleOutskirtsAlvaSummonAudio",
+      "optional": false,
+      "completeWhen": "Any",
+      "objectives": [
+        {
+          "type": "QuestFlag",
+          "flag": {
+            "value": "SummonedAlvaWaterways"
+          },
           "paths": [
             {
               "target": {
-                "kind": "Entity",
+                "kind": "Room",
                 "match": {
-                  "value": "Unlocks Unique Verisium Runeforging"
-                },
-                "matchBy": "Name"
-              }
-            }
-          ],
-          "indicators": [
-            {
-              "target": {
-                "kind": "Entity",
-                "match": {
-                  "value": "Unlocks Unique Verisium Runeforging"
-                },
-                "matchBy": "Name"
+                  "value": "Metadata/Terrain/Gallows/Act3/3_3/Rooms/entrance_01.arm"
+                }
               }
             }
           ]
         }
-      ],
-      "importFp": "fnv1a:b3cc2413"
+      ]
+    },
+    {
+      "id": "b7b380f1bc7f4afda6cbcf21cd2c10c0",
+      "act": 3,
+      "areaId": "g3_3",
+      "areaName": "Jungle Ruins",
+      "text": "Summon Farrow at Runestone",
+      "note": "[auto] area g3_3 | near: Constricted Spitter, Constricted Shambler, Antlion Charger, Snakethroat Shambler, Bane Sapling | rooms: Metadata/Terrain/Gallows/Act3/3_3/Rooms/Fills/FillRuins_10_VaalCubes.arm, Metadata/Terrain/Gallows/Act3/3_3/Rooms/entrance_01.arm, Metadata/Terrain/Gallows/Act3/3_3/Rooms/ClearingFeatures/Fill_VaalCubes_01.arm, Metadata/Terrain/Gallows/Act3/3_3/Rooms/Fills/FillRuins_18_VaalCubes.arm, Metadata/Terrain/Gallows/Act3/3_3/Rooms/Fills/FillRuins_04_VaalCubes.arm | flags: IsMapOwnerOrCouchCoopPartner, FarrowAct3TownNear, IsMapOwner, IsMapOwnerOrCouchCoopPartner, FarrowOnAllTheseApesSeen",
+      "optional": false,
+      "completeWhen": "Any",
+      "objectives": [
+        {
+          "type": "QuestFlag",
+          "flag": {
+            "value": "Act3Runestone1Complete"
+          },
+          "paths": [
+            {
+              "target": {
+                "kind": "Room",
+                "match": {
+                  "value": "Metadata/Terrain/Gallows/Act3/3_3/Rooms/landmark_02_expedition.arm"
+                }
+              }
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "mig-3-189",
       "act": 3,
       "areaId": "g3_3",
       "areaName": "Jungle Ruins",
-      "text": "kill Mighty Silverfist take +2 Skill Points",
+      "text": "Donkey Kong (+2 Passives)",
       "note": "",
       "optional": false,
       "completeWhen": "All",
       "objectives": [
         {
-          "type": "Kill",
+          "type": "QuestFlag",
           "entities": [
             {
               "match": {
@@ -7968,14 +8012,16 @@
               "matchBy": "Name"
             }
           ],
+          "flag": {
+            "value": "G3_3QuadrillaBossKilled"
+          },
           "paths": [
             {
               "target": {
-                "kind": "Entity",
+                "kind": "Tile",
                 "match": {
-                  "value": "Mighty Silverfist"
-                },
-                "matchBy": "Name"
+                  "value": "Metadata/Terrain/Jungle/JungleExterior/RuinedThinwall/RuinedThinwall_Tri_06.tdt"
+                }
               }
             }
           ],
@@ -7995,63 +8041,20 @@
       "importFp": "fnv1a:16b9f30b"
     },
     {
-      "id": "mig-3-190",
-      "act": 3,
-      "areaId": "g3_3",
-      "areaName": "Jungle Ruins",
-      "text": "Jungle Grave (ravaged corpse) -> Servi gives take Rare Belt (choice)",
-      "note": "",
-      "optional": false,
-      "completeWhen": "All",
-      "objectives": [
-        {
-          "type": "Interact",
-          "entities": [
-            {
-              "match": {
-                "value": "Rare Belt (choice)"
-              },
-              "matchBy": "Name"
-            }
-          ],
-          "paths": [
-            {
-              "target": {
-                "kind": "Entity",
-                "match": {
-                  "value": "Rare Belt (choice)"
-                },
-                "matchBy": "Name"
-              }
-            }
-          ],
-          "indicators": [
-            {
-              "target": {
-                "kind": "Entity",
-                "match": {
-                  "value": "Rare Belt (choice)"
-                },
-                "matchBy": "Name"
-              }
-            }
-          ]
-        }
-      ],
-      "importFp": "fnv1a:4d67b15b"
-    },
-    {
       "id": "mig-3-191",
       "act": 3,
       "areaId": "g3_3",
       "areaName": "Jungle Ruins",
-      "text": "Troubled Camp (Gwendolyn Albright) take Guaranteed Rare Gloves",
+      "text": "Troubled Camp (Rare Gloves)",
       "note": "",
       "optional": true,
-      "completeWhen": "All",
+      "completeWhen": "Any",
       "objectives": [
         {
-          "type": "Interact",
+          "type": "QuestFlag",
+          "flag": {
+            "value": "JungleDepthsLandmarkComplete"
+          },
           "label": "Troubled Camp(ARMOUR VENDOR) + Rare Gloves",
           "paths": [
             {
@@ -8075,10 +8078,13 @@
       "text": "Activate the Vaal Beacon",
       "note": "[auto] area g3_3 | near: IncursionPedestalEncounter, Vaal Chest, Checkpoint, Alpha Primate, Antlion Charger, Loose Rubble, Feral Primate, Constricted Shambler | rooms: Metadata/Terrain/Gallows/Act3/3_3/Rooms/incursion_01.arm, Metadata/Terrain/Gallows/Act3/3_3/Rooms/Fills/FillRuins_15_VaalCubes.arm, Metadata/Terrain/Gallows/Act3/3_3/Rooms/Fills/FillRuins_04_VaalCubes.arm, Metadata/Terrain/Gallows/Act3/3_3/Rooms/ClearingFeatures/Clearing_Vaal_02.arm, Metadata/Terrain/Gallows/Act3/3_3/Rooms/Fills/FillRuins_21_VaalCubes.arm | flags: QuadrillaBossSkillBookHeld, ReadJungleExpeditionGlyph02, IncursionObjectSeen, IncursionObjectMonstersDefeated, IncursionEncounterComplete",
       "optional": true,
-      "completeWhen": "All",
+      "completeWhen": "Any",
       "objectives": [
         {
-          "type": "Manual",
+          "type": "QuestFlag",
+          "flag": {
+            "value": "IncursionEncounterComplete"
+          },
           "progressFlags": [
             {
               "value": "IncursionEncounterComplete"
@@ -8100,82 +8106,6 @@
                 "kind": "Entity",
                 "match": {
                   "value": "IncursionPedestalEncounter"
-                },
-                "matchBy": "Path"
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "8f732983eff144f1b3ebd618bbd02d50",
-      "act": 3,
-      "areaId": "g3_3",
-      "areaName": "Jungle Ruins",
-      "text": "Get Waypoint",
-      "note": "[auto] area g3_3 | near: Waypoint, Checkpoint, Antlion Charger, Summon Alva, Stone Altar, Feral Primate, Alpha Primate, Spirit Of The Wolf | rooms: Metadata/Terrain/Gallows/Act3/3_3/Rooms/entrance_01.arm, Metadata/Terrain/Gallows/Act3/3_3/Rooms/Fills/fill_trees_08.arm, Metadata/Terrain/Gallows/Act3/3_3/Rooms/JungleEdge/1x1_Cv_04.arm, Metadata/Terrain/Gallows/Act3/3_3/Rooms/ClearingFeatures/Clearing_Vaal_01.arm, Metadata/Terrain/Gallows/Act3/3_3/Rooms/ClearingFeatures/Fill_VaalCubes_01.arm | flags: IncursionEncounterComplete, IncursionObjectActivated, IncursionObjectActivated1FirstTime, IncursionCompleteG3_3, AchievementCheckWaypoints",
-      "optional": false,
-      "completeWhen": "All",
-      "objectives": [
-        {
-          "type": "Proximity",
-          "entities": [
-            {
-              "match": {
-                "value": "Waypoint"
-              },
-              "matchBy": "Name"
-            }
-          ],
-          "distance": 10.0,
-          "paths": [
-            {
-              "target": {
-                "kind": "Entity",
-                "match": {
-                  "value": "Waypoint_LongActivationRadius"
-                },
-                "matchBy": "Path"
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "6b4bc010412d49cd9aed64300a2a4c3a",
-      "act": 3,
-      "areaId": "g3_3",
-      "areaName": "Jungle Ruins",
-      "text": "Find and Summon Farrow",
-      "note": "[auto] area g3_3 | near: Summon Farrow, Expedition2JungleRuinsInteract, Chest, Checkpoint, Loose Rubble, Bane Sapling | rooms: Metadata/Terrain/Gallows/Act3/3_3/Rooms/landmark_02_expedition.arm, Metadata/Terrain/Gallows/Act3/3_3/Rooms/tree_fill_01.arm, Metadata/Terrain/Gallows/Act3/3_3/Rooms/Waterways/waterway_to_jungle_02.arm, Metadata/Terrain/Gallows/Act3/3_3/Rooms/JungleEdge/1x1_St_04.arm, Metadata/Terrain/Gallows/Act3/3_3/Rooms/ClearingFeatures/Clearing_Vaal_01.arm | flags: IncursionObjectActivated, IncursionObjectActivated1FirstTime, IncursionCompleteG3_3, AchievementCheckWaypoints, ExpeditionQuestJungleRuinsSeen",
-      "optional": true,
-      "completeWhen": "All",
-      "objectives": [
-        {
-          "type": "Interact",
-          "progressFlags": [
-            {
-              "value": "Act3Runestone1Complete"
-            }
-          ],
-          "paths": [
-            {
-              "target": {
-                "kind": "Room",
-                "match": {
-                  "value": "Metadata/Terrain/Gallows/Act3/3_3/Rooms/landmark_02_expedition.arm"
-                }
-              }
-            }
-          ],
-          "indicators": [
-            {
-              "target": {
-                "kind": "Entity",
-                "match": {
-                  "value": "SummonFarrow"
                 },
                 "matchBy": "Path"
               }
@@ -8211,17 +8141,32 @@
       "importFp": "fnv1a:d779b336"
     },
     {
+      "id": "5557551f4e0d4feba548692a5ab50d87",
+      "act": 3,
+      "areaId": "g3_4",
+      "areaName": "The Venom Crypts",
+      "text": "Get Waypoint",
+      "note": "",
+      "optional": false,
+      "completeWhen": "All",
+      "objectives": [
+        {
+          "type": "ActivateWaypoint"
+        }
+      ]
+    },
+    {
       "id": "mig-3-194",
       "act": 3,
       "areaId": "g3_4",
       "areaName": "The Venom Crypts",
-      "text": "Sarcophagus event take Guaranteed Lv3 Support",
+      "text": "Sarcophagus (L3 Support Gem)",
       "note": "",
       "optional": true,
       "completeWhen": "All",
       "objectives": [
         {
-          "type": "Interact",
+          "type": "QuestFlag",
           "entities": [
             {
               "match": {
@@ -8230,6 +8175,9 @@
               "matchBy": "Path"
             }
           ],
+          "flag": {
+            "value": "SnakePitLandmarkChestOpened"
+          },
           "progressFlags": [
             {
               "value": "SnakePitLandmarkChestOpened"
@@ -8241,7 +8189,7 @@
               "target": {
                 "kind": "Room",
                 "match": {
-                  "value": "story_room"
+                  "value": "Metadata/Terrain/Gallows/Act3/3_4/Rooms/Unique/story_room.arm"
                 }
               }
             }
@@ -8260,6 +8208,34 @@
         }
       ],
       "importFp": "fnv1a:bb78caec"
+    },
+    {
+      "id": "27f7814c9e014948bf665bc6717c70d4",
+      "act": 3,
+      "areaId": "g3_4",
+      "areaName": "The Venom Crypts",
+      "text": "Summon Farrow at the Runestone",
+      "note": "[auto] area g3_4 | near: Checkpoint, Entwined Hulk, BossRoomMinimapIcon, Chest, Summon Farrow, Abyssal Shambler, Chest, Rotted Rat | rooms: Metadata/Terrain/Gallows/Act3/3_4/Rooms/Unique/boss_02.arm, Metadata/Terrain/Gallows/Act3/3_4/Rooms/Fills/ground_fill_v02_01.arm, Metadata/Terrain/Gallows/Act3/3_4/Rooms/Unique/rune_01.arm, Metadata/Terrain/Gallows/Act3/3_4/Rooms/Orok/backup_01.arm, Metadata/Terrain/Gallows/Act3/3_4/Rooms/Fills/ground_fill_v01_01.arm | flags: SnakePitLandmarkChestOpened, VenomCryptsSupportGemPickedUp, AbyssCrackSeen, AbyssCrackCombatStarted, AbyssPitSeen",
+      "optional": false,
+      "completeWhen": "Any",
+      "objectives": [
+        {
+          "type": "QuestFlag",
+          "flag": {
+            "value": "Act3Runestone2Complete"
+          },
+          "paths": [
+            {
+              "target": {
+                "kind": "Room",
+                "match": {
+                  "value": "rune"
+                }
+              }
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "mig-3-195",
@@ -8392,7 +8368,7 @@
       "act": 3,
       "areaId": "g3_4",
       "areaName": "The Venom Crypts",
-      "text": "TP back to town",
+      "text": "Return to Ziggurat Encampment",
       "note": "",
       "optional": false,
       "completeWhen": "All",
@@ -8459,7 +8435,7 @@
       "act": 3,
       "areaId": "g3_town",
       "areaName": "Ziggurat Encampment",
-      "text": "Head to Jungle Ruins",
+      "text": "Enter Jungle Ruins",
       "note": "",
       "optional": false,
       "completeWhen": "All",
@@ -8478,7 +8454,7 @@
       "act": 3,
       "areaId": "g3_3",
       "areaName": "Jungle Ruins",
-      "text": "Head to Infested Barrens",
+      "text": "Enter Infested Barrens (checkpoint if avail)",
       "note": "[auto] area g3_3 | near: Checkpoint | rooms: Metadata/Terrain/Gallows/Act3/3_3/Rooms/exit_JungleAnterior.arm, Metadata/Terrain/Gallows/Act3/3_3/Rooms/tree_fill_01.arm, Metadata/Terrain/Gallows/Act3/3_3/Rooms/Fills/FillRuins_15_VaalCubes.arm, Metadata/Terrain/Gallows/Act3/3_3/Rooms/JungleEdge/1x1_Cc_01.arm, Metadata/Terrain/Gallows/Act3/3_3/Rooms/JungleEdge/1x1_St_03.arm | flags: IsMapOwnerOrCouchCoopPartner, FarrowFoundRunestoneInArea, VisitedG3_2_1, ExpeditionQuestJungleRuinsSeen, FarrowFoundRunestoneInArea",
       "optional": false,
       "completeWhen": "All",
@@ -8591,7 +8567,7 @@
       "act": 3,
       "areaId": "g3_2_1",
       "areaName": "Infested Barrens",
-      "text": "Troubled Camp (Sebastian Carroway) take Guaranteed Rare Boots",
+      "text": "Troubled Camp (Rare Boots)",
       "note": "",
       "optional": true,
       "completeWhen": "All",
@@ -8614,18 +8590,9 @@
           "paths": [
             {
               "target": {
-                "kind": "Entity",
+                "kind": "Tile",
                 "match": {
-                  "value": "SebastianCarroway_"
-                },
-                "matchBy": "Path"
-              }
-            },
-            {
-              "target": {
-                "kind": "Room",
-                "match": {
-                  "value": "Metadata/Terrain/Gallows/Act3/3_2_1/Rooms/landmark_01.arm"
+                  "value": "Metadata/Terrain/Jungle/AntHill/AntJungle_Edge/AntEdge_Landmark_Feature_01.tdt"
                 }
               }
             }
@@ -8759,7 +8726,7 @@
       "act": 3,
       "areaId": "g3_5",
       "areaName": "Chimeral Wetlands",
-      "text": "Toxic Bloom point of interest (Noxious Behemoth) take Magic Amulet",
+      "text": "Noxious Behemoth (Magic Amulet)",
       "note": "",
       "optional": true,
       "completeWhen": "All",
@@ -8888,7 +8855,7 @@
       "act": 3,
       "areaId": "g3_5",
       "areaName": "Chimeral Wetlands",
-      "text": "kill Xyclucian, the Chimera -> loot Inscribed Ultimatum",
+      "text": "kill Xyclucian, the Chimera (Inscribed Ultimatum)",
       "note": "",
       "optional": false,
       "completeWhen": "All",
@@ -8935,27 +8902,10 @@
               "target": {
                 "kind": "Entity",
                 "match": {
-                  "value": "Xyclucian, the Chimera"
-                },
-                "matchBy": "Name"
-              }
-            },
-            {
-              "target": {
-                "kind": "Entity",
-                "match": {
                   "value": "ChimeraWetlandsBoss"
                 },
-                "matchBy": "Path"
-              }
-            },
-            {
-              "target": {
-                "kind": "Entity",
-                "match": {
-                  "value": "ChimeraWetlandsPillar"
-                },
-                "matchBy": "Path"
+                "matchBy": "Path",
+                "living": true
               }
             },
             {
@@ -8976,7 +8926,7 @@
       "act": 3,
       "areaId": "g3_5",
       "areaName": "Chimeral Wetlands",
-      "text": "Enter Jiquani's Machinarium behind boss",
+      "text": "Enter Jiquani's Machinarium",
       "note": "",
       "optional": false,
       "completeWhen": "All",
@@ -8998,7 +8948,7 @@
       "act": 3,
       "areaId": "g3_6_1",
       "areaName": "Jiquani's Machniarium",
-      "text": "Get Jiquani's Machinarium Waypoint",
+      "text": "Get Waypoint",
       "note": "",
       "optional": false,
       "completeWhen": "All",
@@ -9084,7 +9034,7 @@
       "act": 3,
       "areaId": "g3_10",
       "areaName": "Temple of Chaos",
-      "text": "Use Inscribed Ultimatum at trial entrance",
+      "text": "Use Inscribed Ultimatum",
       "note": "",
       "optional": false,
       "completeWhen": "All",
@@ -9193,7 +9143,7 @@
       "text": "Waypoint to Jiquani's Machinarium",
       "note": "",
       "optional": false,
-      "completeWhen": "All",
+      "completeWhen": "Any",
       "objectives": [
         {
           "type": "EnterArea",
@@ -9283,26 +9233,25 @@
               "count": 1
             }
           ],
-          "flag": {
-            "value": "SmallSoulCoreHeld"
-          },
           "paths": [
             {
               "target": {
-                "kind": "Room",
+                "kind": "Entity",
                 "match": {
-                  "value": "Metadata/Terrain/Gallows/Act3/3_6_1/Rooms/Storageway/Storage_Cv_04.arm"
-                }
+                  "value": "Metadata/Items/QuestItems/Gallows/Act3/VaalKeyGem"
+                },
+                "matchBy": "Path"
               }
             }
           ],
           "indicators": [
             {
               "target": {
-                "kind": "Room",
+                "kind": "Entity",
                 "match": {
-                  "value": "Metadata/Terrain/Gallows/Act3/3_6_1/Rooms/Storageway/Storage_Cv_04.arm"
-                }
+                  "value": "Metadata/Items/QuestItems/Gallows/Act3/VaalKeyGem"
+                },
+                "matchBy": "Path"
               }
             }
           ],
@@ -9311,10 +9260,11 @@
               "iconKey": "Exclamation",
               "tint": 4294953020,
               "target": {
-                "kind": "Room",
+                "kind": "Entity",
                 "match": {
-                  "value": "Metadata/Terrain/Gallows/Act3/3_6_1/Rooms/Storageway/Storage_Cv_04.arm"
-                }
+                  "value": "Metadata/Items/QuestItems/Gallows/Act3/VaalKeyGem"
+                },
+                "matchBy": "Path"
               }
             }
           ]
@@ -9375,7 +9325,7 @@
       "act": 3,
       "areaId": "g3_6_1",
       "areaName": "Jiquani's Machinarium",
-      "text": "Loot 3-4 Small Soul Cores",
+      "text": "Loot 2-4 Small Soul Cores",
       "note": "",
       "optional": false,
       "completeWhen": "All",
@@ -9395,7 +9345,7 @@
               "match": {
                 "value": "Small Soul Core"
               },
-              "count": 4
+              "count": 2
             }
           ],
           "paths": [
@@ -9506,6 +9456,12 @@
               "size": 36.0
             }
           ]
+        },
+        {
+          "type": "QuestFlag",
+          "flag": {
+            "value": "SmallSoulCoreUsed4"
+          }
         }
       ],
       "importFp": "fnv1a:ff04ed29"
@@ -9515,7 +9471,7 @@
       "act": 3,
       "areaId": "g3_6_1",
       "areaName": "Jiquani's Machinarium",
-      "text": "Loot Supply Room (requires 1 Small Soul Core)",
+      "text": "Loot Supply Room (requires Small Soul Core)",
       "note": "",
       "optional": true,
       "completeWhen": "All",
@@ -9589,7 +9545,7 @@
       "act": 3,
       "areaId": "g3_6_1",
       "areaName": "Jiquani's Machinarium",
-      "text": "Kill Blackjaw, the Remnant (Requires 2 Small Soul Cores)",
+      "text": "Kill Blackjaw, the Remnant (Requires Small Soul Core)",
       "note": "",
       "optional": false,
       "completeWhen": "All",
@@ -9646,7 +9602,7 @@
       "act": 3,
       "areaId": "g3_6_1",
       "areaName": "Jiquani's Machinarium",
-      "text": "Enter Jiquani's Sanctum (Requires 1 Small Soul Core)",
+      "text": "Enter Jiquani's Sanctum (Requires Small Soul Core)",
       "note": "",
       "optional": false,
       "completeWhen": "All",
@@ -9710,7 +9666,7 @@
       "text": "Summon/talk to Alva",
       "note": "",
       "optional": false,
-      "completeWhen": "All",
+      "completeWhen": "Any",
       "objectives": [
         {
           "type": "QuestFlag",
@@ -9723,7 +9679,7 @@
             }
           ],
           "flag": {
-            "value": "AlvaG3GeneratorsSeen"
+            "value": "AlvaG3_6_2SummonAlvaSummoned"
           },
           "progressFlags": [
             {
@@ -9827,12 +9783,12 @@
       "text": "Activate Generator 1",
       "note": "",
       "optional": false,
-      "completeWhen": "All",
+      "completeWhen": "Any",
       "objectives": [
         {
           "type": "QuestFlag",
           "flag": {
-            "value": "MediumSoulCoreUsed1"
+            "value": "MachinariumLowerPowerFirstGenerator"
           },
           "paths": [
             {
@@ -10256,6 +10212,16 @@
                 },
                 "matchBy": "Path"
               }
+            },
+            {
+              "target": {
+                "kind": "Entity",
+                "match": {
+                  "value": "(?i)waterlevellever\\d*",
+                  "regex": true
+                },
+                "matchBy": "Path"
+              }
             }
           ],
           "minimapIcons": [
@@ -10290,6 +10256,16 @@
           "flag": {
             "value": "WaterwaysSeeServiSonGrave"
           },
+          "paths": [
+            {
+              "target": {
+                "kind": "Tile",
+                "match": {
+                  "value": "Metadata/Terrain/Jungle/JungleExterior/Feature/Jungle_WaterwaysLever_01.tdt"
+                }
+              }
+            }
+          ],
           "indicators": [
             {
               "target": {
@@ -10333,7 +10309,19 @@
           "type": "QuestFlag",
           "flag": {
             "value": "SummonedServiWaterways"
-          }
+          },
+          "indicators": [
+            {
+              "target": {
+                "kind": "Entity",
+                "match": {
+                  "value": "(?i)waterlevellever\\d*",
+                  "regex": true
+                },
+                "matchBy": "Path"
+              }
+            }
+          ]
         }
       ]
     },
@@ -10351,7 +10339,19 @@
           "type": "QuestFlag",
           "flag": {
             "value": "ReadKuamGlyph"
-          }
+          },
+          "indicators": [
+            {
+              "target": {
+                "kind": "Entity",
+                "match": {
+                  "value": "(?i)waterlevellever\\d*",
+                  "regex": true
+                },
+                "matchBy": "Path"
+              }
+            }
+          ]
         }
       ]
     },
@@ -10369,7 +10369,19 @@
           "type": "QuestFlag",
           "flag": {
             "value": "ServiG3MoragQuestSeen"
-          }
+          },
+          "indicators": [
+            {
+              "target": {
+                "kind": "Entity",
+                "match": {
+                  "value": "(?i)waterlevellever\\d*",
+                  "regex": true
+                },
+                "matchBy": "Path"
+              }
+            }
+          ]
         }
       ]
     },
@@ -10433,6 +10445,21 @@
         }
       ],
       "importFp": "fnv1a:4b151842"
+    },
+    {
+      "id": "09d1341705c9478d9bc5efa8558bc789",
+      "act": 3,
+      "areaId": "g3_7",
+      "areaName": "Azak Bog",
+      "text": "Get Waypoint",
+      "note": "",
+      "optional": false,
+      "completeWhen": "All",
+      "objectives": [
+        {
+          "type": "ActivateWaypoint"
+        }
+      ]
     },
     {
       "id": "mig-3-228",
@@ -10698,7 +10725,19 @@
       "completeWhen": "Any",
       "objectives": [
         {
-          "type": "Manual"
+          "type": "Manual",
+          "indicators": [
+            {
+              "target": {
+                "kind": "Entity",
+                "match": {
+                  "value": "(?i)waterlevellever\\d*",
+                  "regex": true
+                },
+                "matchBy": "Path"
+              }
+            }
+          ]
         },
         {
           "type": "QuestFlag",
@@ -10719,10 +10758,15 @@
       "completeWhen": "Any",
       "objectives": [
         {
-          "type": "QuestFlag",
-          "flag": {
-            "value": "WaterLevelLowered"
-          },
+          "type": "Interact",
+          "entities": [
+            {
+              "match": {
+                "value": "Metadata/Terrain/Gallows/Act3/3_2_2/Objects/WaterLevelLever_FinalLever"
+              },
+              "matchBy": "Path"
+            }
+          ],
           "paths": [
             {
               "target": {
@@ -10730,88 +10774,6 @@
                 "match": {
                   "value": "Metadata/Terrain/Jungle/JungleExterior/Feature/Jungle_WaterwaysLever_01.tdt"
                 }
-              }
-            },
-            {
-              "target": {
-                "kind": "Entity",
-                "match": {
-                  "value": "WaterLevelLever_FinalLever"
-                },
-                "matchBy": "Path"
-              }
-            }
-          ],
-          "indicators": [
-            {
-              "target": {
-                "kind": "Entity",
-                "match": {
-                  "value": "g3_7",
-                  "regex": true
-                },
-                "matchBy": "Path"
-              }
-            },
-            {
-              "target": {
-                "kind": "Tile",
-                "match": {
-                  "value": "Metadata/Terrain/Gallows/Act3/3_2_2/Objects/WaterLevelLeverA2"
-                }
-              }
-            },
-            {
-              "target": {
-                "kind": "Entity",
-                "match": {
-                  "value": "WaterLevelLeverF3"
-                },
-                "matchBy": "Path"
-              }
-            },
-            {
-              "target": {
-                "kind": "Entity",
-                "match": {
-                  "value": "WaterLevelLever_FinalLever"
-                },
-                "matchBy": "Path"
-              }
-            }
-          ],
-          "minimapIcons": [
-            {
-              "iconKey": "Exclamation",
-              "tint": 4294953020,
-              "target": {
-                "kind": "Tile",
-                "match": {
-                  "value": "(?i)waterlevellever\\d*",
-                  "regex": true
-                }
-              }
-            },
-            {
-              "iconKey": "Exclamation",
-              "tint": 4294953020,
-              "target": {
-                "kind": "Entity",
-                "match": {
-                  "value": "WaterLevelLeverF3"
-                },
-                "matchBy": "Path"
-              }
-            },
-            {
-              "iconKey": "Exclamation",
-              "tint": 4294953020,
-              "target": {
-                "kind": "Entity",
-                "match": {
-                  "value": "WaterLevelLever_FinalLever"
-                },
-                "matchBy": "Path"
               }
             }
           ]
@@ -10893,7 +10855,7 @@
       "act": 3,
       "areaId": "g3_town",
       "areaName": "Ziggurat Encampment",
-      "text": "Travel to Infested Barrens",
+      "text": "Waypoint to Infested Barrens",
       "note": "",
       "optional": true,
       "completeWhen": "Any",
@@ -11143,7 +11105,7 @@
         {
           "type": "EnterArea",
           "areaTarget": {
-            "value": "g3_town"
+            "value": "g3_8"
           }
         }
       ],
@@ -11279,97 +11241,6 @@
       ]
     },
     {
-      "id": "1477bd444a704ff88acb8491b5840065",
-      "act": 3,
-      "areaId": "g3_8",
-      "areaName": "The Drowned City",
-      "text": "Enter Apex of Filth",
-      "note": "",
-      "optional": false,
-      "completeWhen": "All",
-      "objectives": [
-        {
-          "type": "EnterArea",
-          "areaTarget": {
-            "value": "g3_11"
-          },
-          "paths": [
-            {
-              "target": {
-                "kind": "Tile",
-                "match": {
-                  "value": "Metadata/Terrain/Jungle/AreaTransitions/SunkenCityPresent/jungle_pyramid_entrance_atziri_03.tdt"
-                }
-              }
-            },
-            {
-              "target": {
-                "kind": "Room",
-                "match": {
-                  "value": "Metadata/Terrain/Gallows/Act3/3_8/Rooms/Unique/Boss_01.arm"
-                }
-              }
-            }
-          ],
-          "indicators": [
-            {
-              "target": {
-                "kind": "Tile",
-                "match": {
-                  "value": "Metadata/Terrain/Jungle/AreaTransitions/SunkenCityPresent/jungle_pyramid_entrance_atziri_03.tdt"
-                }
-              }
-            }
-          ],
-          "minimapIcons": [
-            {
-              "iconKey": "Exclamation",
-              "tint": 4294953020,
-              "target": {
-                "kind": "Tile",
-                "match": {
-                  "value": "Metadata/Terrain/Jungle/AreaTransitions/SunkenCityPresent/jungle_pyramid_entrance_atziri_03.tdt"
-                }
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ce7c126666e641c799e2683a58cc0e81",
-      "act": 3,
-      "areaId": "g3_11",
-      "areaName": "The Apex of Filth",
-      "text": "Get Waypoint",
-      "note": "",
-      "optional": false,
-      "completeWhen": "All",
-      "objectives": [
-        {
-          "type": "ActivateWaypoint"
-        }
-      ]
-    },
-    {
-      "id": "f14a0366fc894fe8ad5741568b13f7c8",
-      "act": 3,
-      "areaId": "g3_11",
-      "areaName": "The Apex of Filth",
-      "text": "Return to Drowned City",
-      "note": "",
-      "optional": false,
-      "completeWhen": "All",
-      "objectives": [
-        {
-          "type": "EnterArea",
-          "areaTarget": {
-            "value": "g3_8"
-          }
-        }
-      ]
-    },
-    {
       "id": "1142d9932f394dcda2541f5222fc01ad",
       "act": 3,
       "areaId": "g3_8",
@@ -11383,7 +11254,17 @@
           "type": "QuestFlag",
           "flag": {
             "value": "TreasureVaultOswaldLoreHeard"
-          }
+          },
+          "paths": [
+            {
+              "target": {
+                "kind": "Tile",
+                "match": {
+                  "value": "Metadata/Terrain/Jungle/AreaTransitions/SunkenCityPresent/jungle_pyramid_entrance_vault_01.tdt"
+                }
+              }
+            }
+          ]
         }
       ]
     },
@@ -11394,7 +11275,7 @@
       "areaName": "The Drowned City",
       "text": "Enter The Molten Vault",
       "note": "",
-      "optional": false,
+      "optional": true,
       "completeWhen": "Any",
       "objectives": [
         {
@@ -11445,7 +11326,7 @@
       "areaName": "The Molten Vault",
       "text": "Get Waypoint",
       "note": "",
-      "optional": false,
+      "optional": true,
       "completeWhen": "All",
       "objectives": [
         {
@@ -11533,7 +11414,7 @@
       "areaName": "Ziggurat Encampment",
       "text": "Talk to Oswald",
       "note": "",
-      "optional": false,
+      "optional": true,
       "completeWhen": "All",
       "objectives": [
         {
@@ -11577,9 +11458,9 @@
       "act": 3,
       "areaId": "g3_town",
       "areaName": "Ziggurat Encampment",
-      "text": "TP to Apex of Filth",
+      "text": "Waypoint to Drowned City",
       "note": "",
-      "optional": false,
+      "optional": true,
       "completeWhen": "All",
       "objectives": [
         {
@@ -11587,6 +11468,79 @@
         }
       ],
       "importFp": "fnv1a:e4fb8aec"
+    },
+    {
+      "id": "1477bd444a704ff88acb8491b5840065",
+      "act": 3,
+      "areaId": "g3_8",
+      "areaName": "The Drowned City",
+      "text": "Enter Apex of Filth",
+      "note": "",
+      "optional": false,
+      "completeWhen": "All",
+      "objectives": [
+        {
+          "type": "EnterArea",
+          "areaTarget": {
+            "value": "g3_11"
+          },
+          "paths": [
+            {
+              "target": {
+                "kind": "Tile",
+                "match": {
+                  "value": "Metadata/Terrain/Jungle/AreaTransitions/SunkenCityPresent/jungle_pyramid_entrance_atziri_03.tdt"
+                }
+              }
+            },
+            {
+              "target": {
+                "kind": "Room",
+                "match": {
+                  "value": "Metadata/Terrain/Gallows/Act3/3_8/Rooms/Unique/Boss_01.arm"
+                }
+              }
+            }
+          ],
+          "indicators": [
+            {
+              "target": {
+                "kind": "Tile",
+                "match": {
+                  "value": "Metadata/Terrain/Jungle/AreaTransitions/SunkenCityPresent/jungle_pyramid_entrance_atziri_03.tdt"
+                }
+              }
+            }
+          ],
+          "minimapIcons": [
+            {
+              "iconKey": "Exclamation",
+              "tint": 4294953020,
+              "target": {
+                "kind": "Tile",
+                "match": {
+                  "value": "Metadata/Terrain/Jungle/AreaTransitions/SunkenCityPresent/jungle_pyramid_entrance_atziri_03.tdt"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ce7c126666e641c799e2683a58cc0e81",
+      "act": 3,
+      "areaId": "g3_11",
+      "areaName": "The Apex of Filth",
+      "text": "Get Waypoint",
+      "note": "",
+      "optional": false,
+      "completeWhen": "All",
+      "objectives": [
+        {
+          "type": "ActivateWaypoint"
+        }
+      ]
     },
     {
       "id": "mig-3-244",
@@ -11696,34 +11650,6 @@
                   "value": "CauldronMinimapIcon"
                 },
                 "matchBy": "Path"
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "1f0715021a7049bd88467e38c0754794",
-      "act": 3,
-      "areaId": "g3_11",
-      "areaName": "Apex of Filth",
-      "text": "Find Queen of Filth",
-      "note": "[auto] area g3_11 | near: BossRoomMinimapIcon, The Queen of Filth, Arena, Ancient Carving, Checkpoint | rooms: Metadata/Terrain/Gallows/Act3/3_11/Rooms/Unique/filth_pools_01.arm, Metadata/Terrain/Gallows/Act3/3_11/Rooms/Outer/Outer_St_01.arm, Metadata/Terrain/Gallows/Act3/3_11/Rooms/Outer/Outer_Cv_02.arm, Metadata/Terrain/Gallows/Act3/3_11/Rooms/Fills/Fill_ThickWall_02.arm, Metadata/Terrain/Gallows/Act3/3_11/Rooms/Sacrifice/Straight_03.arm | flags: AggoratLandmarkMushroomsUsed, AggoratCroneGetFlask, AggoratLandmarkManaFlaskPickedUp, AggoratLandmarkLifeFlaskPickedUp, QueenOfFilthSeen",
-      "optional": false,
-      "completeWhen": "Any",
-      "objectives": [
-        {
-          "type": "QuestFlag",
-          "flag": {
-            "value": "QueenOfFilthSeen"
-          },
-          "indicators": [
-            {
-              "target": {
-                "kind": "Tile",
-                "match": {
-                  "value": "Metadata/Terrain/Jungle/Aggorat/Features/AggoratArena_01.tdt"
-                }
               }
             }
           ]
@@ -11873,86 +11799,19 @@
       "act": 3,
       "areaId": "g3_town",
       "areaName": "Ziggurat Encampment",
-      "text": "Door behind her -> enter Temple of Kopec",
+      "text": "Enter Temple of Kopec",
       "note": "",
       "optional": false,
       "completeWhen": "Any",
       "objectives": [
         {
-          "type": "QuestFlag",
-          "flag": {
-            "value": "ZigguratEntranceUnlocked"
+          "type": "EnterArea",
+          "areaTarget": {
+            "value": "g3_12"
           }
         }
       ],
       "importFp": "fnv1a:cf0de4ee"
-    },
-    {
-      "id": "268a85efe37d4880b0baf9460ce234bb",
-      "act": 3,
-      "areaId": "g3_town",
-      "areaName": "Ziggurat Encampment",
-      "text": "(new step)",
-      "note": "[auto] area g3_town | near: Temple of Kopec, Alva, The Drowned City, Temple of Kopec | rooms: Metadata/Terrain/Gallows/Act3/3_town/Rooms/Unique/town_01.arm, Metadata/Terrain/Gallows/Act3/3_town/Rooms/Past/fill_02.arm, Metadata/Terrain/Gallows/Act3/3_town/Rooms/Past/past_town_01.arm | flags: AlvaG3ZigguratDoorKeySeen, G3_12EntranceOpened, ZigguratEntranceUnlocked",
-      "optional": false,
-      "completeWhen": "All",
-      "objectives": [
-        {
-          "type": "Manual"
-        }
-      ]
-    },
-    {
-      "id": "mig-3-249",
-      "act": 3,
-      "areaId": "g3_12",
-      "areaName": "Temple of Kopec",
-      "text": "kill Ketzuli, High Priest of the Sun (upstairs)",
-      "note": "",
-      "optional": false,
-      "completeWhen": "Any",
-      "objectives": [
-        {
-          "type": "Kill",
-          "entities": [
-            {
-              "match": {
-                "value": "Ketzuli, High Priest of the Sun"
-              },
-              "matchBy": "Name"
-            }
-          ],
-          "paths": [
-            {
-              "target": {
-                "kind": "Entity",
-                "match": {
-                  "value": "Ketzuli, High Priest of the Sun"
-                },
-                "matchBy": "Name"
-              }
-            }
-          ],
-          "indicators": [
-            {
-              "target": {
-                "kind": "Entity",
-                "match": {
-                  "value": "Ketzuli, High Priest of the Sun"
-                },
-                "matchBy": "Name"
-              }
-            }
-          ]
-        },
-        {
-          "type": "QuestFlag",
-          "flag": {
-            "value": "VisitedG3_12"
-          }
-        }
-      ],
-      "importFp": "fnv1a:6587501b"
     },
     {
       "id": "72c1b93ef29147ddb9b4319d27b4aaf8",
@@ -12011,7 +11870,7 @@
               "matchBy": "Path"
             }
           ],
-          "distance": 40.0,
+          "distance": 5.0,
           "paths": [
             {
               "target": {
@@ -12059,7 +11918,7 @@
               "matchBy": "Path"
             }
           ],
-          "distance": 40.0,
+          "distance": 5.0,
           "paths": [
             {
               "target": {
@@ -12118,6 +11977,24 @@
           "type": "QuestFlag",
           "flag": {
             "value": "ZigguratSummonedAlva"
+          }
+        }
+      ]
+    },
+    {
+      "id": "655abeae1e624aa79ce92102ca4bd4ee",
+      "act": 3,
+      "areaId": "g3_12",
+      "areaName": "Temple of Kopec",
+      "text": "Talk to Alva",
+      "note": "[auto] area g3_12 | near: BossRoomMinimapIcon, Alva, Summon Alva, Ketzuli, High Priest of the Sun, Arena, Checkpoint | rooms: Metadata/Terrain/Gallows/Act3/3_12/Rooms/Unique/boss_04.arm, Metadata/Terrain/Gallows/Act3/3_12/Rooms/Outer/corner_02.arm, Metadata/Terrain/Gallows/Act3/3_12/Rooms/Outer/side_01.arm, Metadata/Terrain/Gallows/Act3/3_12/Rooms/1x1/open_01.arm, Metadata/Terrain/Gallows/Act3/3_12/Rooms/Outer/side_02_01.arm",
+      "optional": false,
+      "completeWhen": "Any",
+      "objectives": [
+        {
+          "type": "QuestFlag",
+          "flag": {
+            "value": "MakeTimePortalVisible"
           }
         }
       ]

@@ -233,8 +233,9 @@ public sealed class RouteRepository
         return -1;
     }
 
-    // how many visible steps ahead the quest-flag catch-up may scan and jump.
-    private const int FlagLookaheadWindow = 8;
+    // how many visible steps ahead the quest-flag catch-up may scan and jump. kept small so auto-advance
+    // never leaps a big chunk of the route; manual sync handles a real long-distance catch-up.
+    private const int FlagLookaheadWindow = 3;
 
     // catch-up advance: when a quest flag for a step ahead has already flipped (player skipped content or
     // flags tripped out of order), jump to the proper step. scans the next visible steps within the window,

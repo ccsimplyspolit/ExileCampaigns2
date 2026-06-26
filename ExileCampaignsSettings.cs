@@ -15,10 +15,10 @@ public class DevSettings
     public ToggleNode ShowDevOverlay { get; set; } = new ToggleNode(false);
 
     [Menu("Room names", "Draw AreaGraph room outlines + name labels (shows tile patterns for ClusterTarget authored fallbacks)")]
-    public ToggleNode ShowRoomNames { get; set; } = new ToggleNode(true);
+    public ToggleNode ShowRoomNames { get; set; } = new ToggleNode(false);
 
     [Menu("Entity labels", "Label AreaTransition / Waypoint / boss entities with their shortened entity path")]
-    public ToggleNode ShowEntityLabels { get; set; } = new ToggleNode(true);
+    public ToggleNode ShowEntityLabels { get; set; } = new ToggleNode(false);
 
     [Menu("Show quick edit panel", "Floating dev panel for in-game route editing: quick-add step/objective " +
         "seeded from live state, move/delete steps, bind advances, and set Radar paths on the current objective")]
@@ -65,7 +65,7 @@ public class PathRenderSettings
     public ToggleNode ShowComets { get; set; } = new ToggleNode(true);
 
     [Menu("Comets only (hide line)", "When comets are on, don't draw the solid ground line")]
-    public ToggleNode CometsOnly { get; set; } = new ToggleNode(true);
+    public ToggleNode CometsOnly { get; set; } = new ToggleNode(false);
 
     [Menu("Comet color")]
     public ColorNode CometColor { get; set; } = new ColorNode(Color.FromArgb(255, 104, 255, 0));
