@@ -21,6 +21,10 @@ community guide/planner data cannot silently appear current after a patch.
 User-edited routes preserve that metadata and are written through a unique
 temporary file before replacement.
 
+Character progress profiles use the same atomic-write discipline. A corrupt or
+unreadable profile is reset to step zero instead of inheriting the previous
+character's cursor, and a failed save remains dirty for a later retry.
+
 ## Status
 
 Build: **PASS**. Classification: **CURRENT_WITH_WARNINGS**; area IDs, quest

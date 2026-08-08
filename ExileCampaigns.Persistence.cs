@@ -79,7 +79,14 @@ public partial class ExileCampaigns
             _lastSavedStep = _route.Current;
             _build = o["build"]?.ToObject<CharacterBuild>() ?? new CharacterBuild();
         }
-        catch { _build = new CharacterBuild(); /* invalid saved progress */ }
+        catch
+        {
+            // Never carry the previous character's cursor into a profile whose
+            // progress file is corrupt or unreadable.
+            _route.SetCurrent(0);
+            _lastSavedStep = _route.Current;
+            _build = new CharacterBuild();
+        }
     }
 
     // write current step on change (called each Tick; cheap, only writes when changed)
@@ -91,22 +98,40 @@ public partial class ExileCampaigns
 
     private void SaveProgress()
     {
-        _lastSavedStep = _route.Current;
+        var step = _route.Current;
+        var path = ProgressPath;
+        string? temporaryPath = null;
         try
         {
-            var dir = Path.GetDirectoryName(ProgressPath);
+            var dir = Path.GetDirectoryName(path);
             if (!string.IsNullOrEmpty(dir)) Directory.CreateDirectory(dir);
-            // stepId goes alongside step index so id-based restore can take over once the route is stable
-            File.WriteAllText(ProgressPath, new JObject
+            // stepId goes alongside step index so id-based restore can take over once the route is stable.
+            // Replace atomically so a crash cannot leave a half-written progress profile.
+            var document = new JObject
             {
                 ["character"] = _charName,
                 ["area"] = _areaId,
-                ["step"] = _route.Current,
+                ["step"] = step,
                 ["stepId"] = _route.CurrentStep?.Model?.Id ?? "",
                 ["build"] = JObject.FromObject(_build),
-            }.ToString());
+            };
+            temporaryPath = $"{path}.{Guid.NewGuid():N}.tmp";
+            File.WriteAllText(temporaryPath, document.ToString());
+            File.Move(temporaryPath, path, true);
+            _lastSavedStep = step;
         }
-        catch { /* config dir not writable */ }
+        catch (Exception ex)
+        {
+            LogError($"ExileCampaigns -> progress save failed: {ex.Message}");
+        }
+        finally
+        {
+            if (temporaryPath != null)
+            {
+                try { if (File.Exists(temporaryPath)) File.Delete(temporaryPath); }
+                catch { /* failed cleanup must not hide the original save error */ }
+            }
+        }
     }
 
     // reset a profile back to step 1. if it's active, reset the live route too; else just rewrite its file on disk
@@ -115,7 +140,6 @@ public partial class ExileCampaigns
         if (name == _charName)
         {
             _route.SetCurrent(0);
-            _lastSavedStep = _route.Current;
             _build = new CharacterBuild();
             SaveProgress();
             return;
