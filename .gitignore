@@ -22,6 +22,10 @@ packages/
 
 # Tests and tools/docs
 tests/
+!tests/
+!tests/ExileCampaigns.Tests/
+!tests/ExileCampaigns.Tests/*.cs
+!tests/ExileCampaigns.Tests/*.csproj
 tools/
 docs/
 harvest/
