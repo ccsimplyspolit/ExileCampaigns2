@@ -17,6 +17,17 @@ public static class RouteJson
             ["version"] = doc.Version,
             ["steps"] = new JArray(doc.Steps.Select(StepToJson)),
         };
+        if (doc.Metadata is { } metadata)
+        {
+            root["metadata"] = new JObject
+            {
+                ["game"] = metadata.Game,
+                ["clientPatch"] = metadata.ClientPatch,
+                ["league"] = metadata.League,
+                ["provenance"] = metadata.Provenance,
+                ["updatedUtc"] = metadata.UpdatedUtc,
+            };
+        }
         return root.ToString(Formatting.Indented);
     }
 
@@ -28,9 +39,32 @@ public static class RouteJson
             var root = JObject.Parse(json);
             int version = (int?)root["version"] ?? RouteDocument.CurrentVersion;
             var steps = (root["steps"] as JArray ?? new JArray()).Select(StepFromJson).ToList();
-            return new RouteDocument(version, steps);
+            return new RouteDocument(version, steps, MetadataFromJson(root["metadata"]));
         }
         catch (JsonException) { return RouteDocument.Empty; }
+    }
+
+    private static RouteMetadata? MetadataFromJson(JToken? token)
+    {
+        if (token is not JObject metadata)
+            return null;
+
+        var game = (string?)metadata["game"];
+        var clientPatch = (string?)metadata["clientPatch"];
+        var league = (string?)metadata["league"];
+        var provenance = (string?)metadata["provenance"];
+        var updatedUtc = (string?)metadata["updatedUtc"];
+        if (string.IsNullOrWhiteSpace(game) && string.IsNullOrWhiteSpace(clientPatch)
+            && string.IsNullOrWhiteSpace(league) && string.IsNullOrWhiteSpace(provenance)
+            && string.IsNullOrWhiteSpace(updatedUtc))
+            return null;
+
+        return new RouteMetadata(
+            string.IsNullOrWhiteSpace(game) ? "poe2" : game,
+            clientPatch,
+            league,
+            provenance,
+            updatedUtc);
     }
 
     private static JObject StepToJson(RouteStep s)

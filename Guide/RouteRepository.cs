@@ -30,6 +30,7 @@ public sealed class RouteRepository
     public IReadOnlyList<FlatStep> Steps => _steps;
     public int Current { get; private set; }
     public string? Status { get; private set; }
+    public RouteMetadata? Metadata { get; private set; }
 
     // mirrors Settings.ShowOptional. when false, navigation skips optional steps so advance/back land only on
     // visible ones. default true.
@@ -126,6 +127,7 @@ public sealed class RouteRepository
     {
         _steps.Clear(); _areaToIndices.Clear(); _stepArea.Clear(); _stepAreaName.Clear();
         Current = 0;
+        Metadata = doc?.Metadata;
         if (doc == null) { Status = "no route document"; return false; }
 
         int act = -1, stepInAct = 0;
@@ -159,7 +161,10 @@ public sealed class RouteRepository
         }
 
         SnapOffHeader();
-        Status = $"{doc.Steps.Count} steps ({_steps.Count} rows)";
+        var provenance = Metadata is { } metadata
+            ? $" · {metadata.Game}/{metadata.ClientPatch ?? "patch?"}"
+            : " · provenance unknown";
+        Status = $"{doc.Steps.Count} steps ({_steps.Count} rows){provenance}";
         return _steps.Count > 0;
     }
 

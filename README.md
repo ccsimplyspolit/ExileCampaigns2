@@ -15,6 +15,12 @@ using local route data and does not automate movement or combat.
 5. Area changes, disable, hot reload, and dispose cancel stale paths and reset
    area state.
 
+The route JSON carries optional PoE2 provenance metadata (`game`, client patch,
+league, provenance, and UTC update time). It is displayed in the route status so
+community guide/planner data cannot silently appear current after a patch.
+User-edited routes preserve that metadata and are written through a unique
+temporary file before replacement.
+
 ## Status
 
 Build: **PASS**. Classification: **CURRENT_WITH_WARNINGS**; area IDs, quest

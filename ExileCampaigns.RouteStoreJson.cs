@@ -1,5 +1,6 @@
 // ExileCampaigns/ExileCampaigns.RouteStoreJson.cs
 using System.IO;
+using System.Text;
 using ExileCampaigns.Guide;
 
 namespace ExileCampaigns;
@@ -29,7 +30,17 @@ public partial class ExileCampaigns
         try
         {
             Directory.CreateDirectory(Path.GetDirectoryName(UserRoutePath)!);
-            File.WriteAllText(UserRoutePath, RouteJson.Write(_routeStore.ToDocument()));
+            var temporaryPath = UserRoutePath + "." + System.Guid.NewGuid().ToString("N") + ".tmp";
+            try
+            {
+                File.WriteAllText(temporaryPath, RouteJson.Write(_routeStore.ToDocument()), new UTF8Encoding(false));
+                File.Move(temporaryPath, UserRoutePath, true);
+            }
+            finally
+            {
+                if (File.Exists(temporaryPath))
+                    File.Delete(temporaryPath);
+            }
         }
         catch (System.Exception ex) { LogError($"ExileCampaigns -> user route.json write failed: {ex.Message}"); }
     }

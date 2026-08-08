@@ -8,10 +8,12 @@ namespace ExileCampaigns.Guide;
 public sealed class RouteStore
 {
     private readonly List<RouteStep> _steps;
+    private readonly RouteMetadata? _metadata;
 
     public RouteStore(RouteDocument doc)
     {
         _steps = new List<RouteStep>(doc?.Steps ?? Array.Empty<RouteStep>());
+        _metadata = doc?.Metadata;
     }
 
     public IReadOnlyList<RouteStep> Steps => _steps;
@@ -73,5 +75,5 @@ public sealed class RouteStore
         return false;
     }
 
-    public RouteDocument ToDocument() => new(RouteDocument.CurrentVersion, new List<RouteStep>(_steps));
+    public RouteDocument ToDocument() => new(RouteDocument.CurrentVersion, new List<RouteStep>(_steps), _metadata);
 }

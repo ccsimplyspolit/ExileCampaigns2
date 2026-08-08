@@ -76,8 +76,17 @@ public sealed record RouteStep(
     IReadOnlyList<Objective> Objectives,
     string? ImportFp);   // fnv1a of the upstream text, null = user-created
 
+// Provenance for the bundled/user route. Guide and planner sites are discovery inputs,
+// not runtime contracts, so the overlay must make the route's patch and origin visible.
+public sealed record RouteMetadata(
+    string Game = "poe2",
+    string? ClientPatch = null,
+    string? League = null,
+    string? Provenance = null,
+    string? UpdatedUtc = null);
+
 // the whole route. Steps list order is the canonical sequence.
-public sealed record RouteDocument(int Version, IReadOnlyList<RouteStep> Steps)
+public sealed record RouteDocument(int Version, IReadOnlyList<RouteStep> Steps, RouteMetadata? Metadata = null)
 {
     public const int CurrentVersion = 2;   // guidance lives in Paths/Indicators/MinimapIcon children
     public static readonly RouteDocument Empty = new(CurrentVersion, new List<RouteStep>());

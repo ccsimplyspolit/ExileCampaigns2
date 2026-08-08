@@ -1,6 +1,12 @@
 {
   "_doc": "Unified route store (ExileCampaigns). Source of truth; edited in-app and merged on import.",
   "version": 2,
+  "metadata": {
+    "game": "poe2",
+    "clientPatch": "0.5.4e",
+    "provenance": "local-authored route; cross-check against current PoE2 client and official patch notes",
+    "updatedUtc": "2026-08-08"
+  },
   "steps": [
     {
       "id": "mig-1-0",
