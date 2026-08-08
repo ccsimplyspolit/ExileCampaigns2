@@ -556,9 +556,12 @@ public partial class ExileCampaigns
         {
             float dx = path[i].X - path[i - 1].X;
             float dy = path[i].Y - path[i - 1].Y;
-            d += MathF.Sqrt(dx * dx + dy * dy);
+            var segment = MathF.Sqrt(dx * dx + dy * dy);
+            if (!float.IsFinite(segment))
+                return float.MaxValue;
+            d += segment;
         }
-        return d;
+        return float.IsFinite(d) ? d : float.MaxValue;
     }
 
     private void DrawOnePath(List<Vector2i>? path, float[][] hd, bool mapVisible, SubMap? largeMap, System.Drawing.Color color)
@@ -591,8 +594,11 @@ public partial class ExileCampaigns
             if (i % nth != 0 && i != path.Count - 1) continue;
             var e = path[i];
             if (!InBounds(e, hd)) { prev = null; continue; }
+            var height = hd[e.Y][e.X];
+            if (!float.IsFinite(height)) { prev = null; continue; }
             var screen = cam.WorldToScreen(
-                new Vector3(e.X * GridToWorldMultiplier, e.Y * GridToWorldMultiplier, hd[e.Y][e.X]));
+                new Vector3(e.X * GridToWorldMultiplier, e.Y * GridToWorldMultiplier, height));
+            if (!IsFinite(screen)) { prev = null; continue; }
             if (prev is { } p && (rect.Contains(p) || rect.Contains(screen)))
                 Graphics.DrawLine(p, screen, thickness, color);
             prev = screen;
@@ -609,6 +615,9 @@ public partial class ExileCampaigns
         var playerHeight = -render.UnclampedHeight;
         var mapCenter = largeMap.MapCenter;
         var mapScale = largeMap.MapScale;
+        if (!IsFinite(playerGrid) || !float.IsFinite(playerHeight) || !IsFinite(mapCenter) ||
+            !double.IsFinite(mapScale) || mapScale <= 0)
+            return;
         var thickness = Settings.Path.PathThickness.Value;
         var nth = Math.Max(1, Settings.Path.DrawEveryNthSegment.Value);
 
@@ -618,8 +627,11 @@ public partial class ExileCampaigns
             if (i % nth != 0 && i != path.Count - 1) continue;
             var e = path[i];
             if (!InBounds(e, hd)) { prev = null; continue; }
-            var delta = GridDeltaToMapDelta(new Vector2(e.X, e.Y) - playerGrid, playerHeight + hd[e.Y][e.X], mapScale);
+            var height = hd[e.Y][e.X];
+            if (!float.IsFinite(height)) { prev = null; continue; }
+            var delta = GridDeltaToMapDelta(new Vector2(e.X, e.Y) - playerGrid, playerHeight + height, mapScale);
             var screen = mapCenter + delta;
+            if (!IsFinite(screen)) { prev = null; continue; }
             if (prev is { } p)
                 Graphics.DrawLine(p, screen, thickness, color);
             prev = screen;
@@ -628,6 +640,8 @@ public partial class ExileCampaigns
 
     private static Vector2 GridDeltaToMapDelta(Vector2 delta, float deltaZ, double mapScale)
     {
+        if (!IsFinite(delta) || !float.IsFinite(deltaZ) || !double.IsFinite(mapScale) || mapScale <= 0)
+            return new Vector2(float.NaN, float.NaN);
         deltaZ /= GridToWorldMultiplier; // z is world units, convert to grid units
         return (float)mapScale * new Vector2(
             (delta.X - delta.Y) * CameraAngleCos,
@@ -636,6 +650,9 @@ public partial class ExileCampaigns
 
     private static bool InBounds(Vector2i e, float[][] hd)
         => e.Y >= 0 && e.Y < hd.Length && e.X >= 0 && e.X < hd[e.Y].Length;
+
+    private static bool IsFinite(Vector2 value)
+        => float.IsFinite(value.X) && float.IsFinite(value.Y);
 
     // --- flowing comets ---
 

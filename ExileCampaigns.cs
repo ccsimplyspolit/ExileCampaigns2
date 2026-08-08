@@ -6,6 +6,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using ExileCampaigns.Guide;
+using ExileCampaigns.Tracking;
 using ExileCore2;
 using ExileCore2.PoEMemory.Components;
 using ExileCore2.PoEMemory.MemoryObjects;
@@ -68,25 +69,16 @@ public partial class ExileCampaigns : BaseSettingsPlugin<ExileCampaignsSettings>
     // resize: which overlay's right edge is dragged to set wrap width.
     private string? _resizeId;
 
+    private bool _settingsHooksAttached;
+
     public override bool Initialise()
     {
         Name = "ExileCampaigns";
 
         foreach (var key in new[] { Settings.NextStepKey, Settings.PrevStepKey, Settings.ToggleKey, Settings.AddGearKey, Settings.SyncKey })
             Input.RegisterKey(key.Value);
-        Settings.NextStepKey.OnValueChanged += () => Input.RegisterKey(Settings.NextStepKey.Value);
-        Settings.PrevStepKey.OnValueChanged += () => Input.RegisterKey(Settings.PrevStepKey.Value);
-        Settings.ToggleKey.OnValueChanged += () => Input.RegisterKey(Settings.ToggleKey.Value);
-        Settings.AddGearKey.OnValueChanged += () => Input.RegisterKey(Settings.AddGearKey.Value);
-        Settings.SyncKey.OnValueChanged += () => Input.RegisterKey(Settings.SyncKey.Value);
         Input.RegisterKey(Settings.Diagnostics.ExportKey.Value);
-        Settings.Diagnostics.ExportKey.OnValueChanged += () => Input.RegisterKey(Settings.Diagnostics.ExportKey.Value);
-
-        Settings.SyncToCharacter.OnPressed += SyncToCharacter;
-        Settings.ReloadRoutes.OnPressed += LoadRoutes;
-        Settings.Diagnostics.ExportNow.OnPressed += ExportDiagnostics;
-        Settings.LogQuestFlags.OnValueChanged += (_, _) => _flagSnapshot = null;   // re-seed on next enable
-        Settings.Diagnostics.RecordDiagnostics.OnValueChanged += (_, _) => _diagFlagSnapshot = null;   // re-seed so toggling on doesn't dump a stale flag burst
+        AttachSettingsHooks();
 
         LoadAreaTargets();    // boss/exit tile fallback for the path when no live entity resolves
         LoadRoutes();
@@ -227,6 +219,9 @@ public partial class ExileCampaigns : BaseSettingsPlugin<ExileCampaignsSettings>
 
     public override void Tick()
     {
+        if (!Settings.Enable)
+            return;
+
         _route.IncludeOptional = Settings.ShowOptional;   // hidden optionals get skipped by advance/back
         if (Settings.ToggleKey.PressedOnce()) _visible = !_visible;
         if (Settings.SyncKey.PressedOnce()) SyncToCharacter();
@@ -275,6 +270,82 @@ public partial class ExileCampaigns : BaseSettingsPlugin<ExileCampaignsSettings>
         DetectEquippedUsed();
 
         MaybeSaveProgress();
+    }
+
+    private void AttachSettingsHooks()
+    {
+        if (_settingsHooksAttached)
+            return;
+
+        Settings.NextStepKey.OnValueChanged += OnNextStepKeyChanged;
+        Settings.PrevStepKey.OnValueChanged += OnPrevStepKeyChanged;
+        Settings.ToggleKey.OnValueChanged += OnToggleKeyChanged;
+        Settings.AddGearKey.OnValueChanged += OnAddGearKeyChanged;
+        Settings.SyncKey.OnValueChanged += OnSyncKeyChanged;
+        Settings.Diagnostics.ExportKey.OnValueChanged += OnExportKeyChanged;
+        Settings.Enable.OnValueChanged += OnEnableChanged;
+        Settings.SyncToCharacter.OnPressed += SyncToCharacter;
+        Settings.ReloadRoutes.OnPressed += LoadRoutes;
+        Settings.Diagnostics.ExportNow.OnPressed += ExportDiagnostics;
+        Settings.LogQuestFlags.OnValueChanged += OnLogQuestFlagsChanged;
+        Settings.Diagnostics.RecordDiagnostics.OnValueChanged += OnRecordDiagnosticsChanged;
+        _settingsHooksAttached = true;
+    }
+
+    private void OnNextStepKeyChanged() => Input.RegisterKey(Settings.NextStepKey.Value);
+    private void OnPrevStepKeyChanged() => Input.RegisterKey(Settings.PrevStepKey.Value);
+    private void OnToggleKeyChanged() => Input.RegisterKey(Settings.ToggleKey.Value);
+    private void OnAddGearKeyChanged() => Input.RegisterKey(Settings.AddGearKey.Value);
+    private void OnSyncKeyChanged() => Input.RegisterKey(Settings.SyncKey.Value);
+    private void OnExportKeyChanged() => Input.RegisterKey(Settings.Diagnostics.ExportKey.Value);
+
+    private void OnEnableChanged(object? _, bool enabled)
+    {
+        if (enabled)
+            return;
+
+        CancelPath();
+        ResetObjectiveProgress();
+        _interactTargets = Array.Empty<InteractTarget>();
+    }
+
+    private void OnLogQuestFlagsChanged(object? _, bool __) => _flagSnapshot = null;
+    private void OnRecordDiagnosticsChanged(object? _, bool __) => _diagFlagSnapshot = null;
+
+    public override void OnPluginDestroyForHotReload()
+    {
+        DetachSettingsHooks();
+        CancelPath();
+        ResetObjectiveProgress();
+        base.OnPluginDestroyForHotReload();
+    }
+
+    public override void Dispose()
+    {
+        DetachSettingsHooks();
+        CancelPath();
+        ResetObjectiveProgress();
+        base.Dispose();
+    }
+
+    private void DetachSettingsHooks()
+    {
+        if (!_settingsHooksAttached)
+            return;
+
+        Settings.NextStepKey.OnValueChanged -= OnNextStepKeyChanged;
+        Settings.PrevStepKey.OnValueChanged -= OnPrevStepKeyChanged;
+        Settings.ToggleKey.OnValueChanged -= OnToggleKeyChanged;
+        Settings.AddGearKey.OnValueChanged -= OnAddGearKeyChanged;
+        Settings.SyncKey.OnValueChanged -= OnSyncKeyChanged;
+        Settings.Diagnostics.ExportKey.OnValueChanged -= OnExportKeyChanged;
+        Settings.Enable.OnValueChanged -= OnEnableChanged;
+        Settings.SyncToCharacter.OnPressed -= SyncToCharacter;
+        Settings.ReloadRoutes.OnPressed -= LoadRoutes;
+        Settings.Diagnostics.ExportNow.OnPressed -= ExportDiagnostics;
+        Settings.LogQuestFlags.OnValueChanged -= OnLogQuestFlagsChanged;
+        Settings.Diagnostics.RecordDiagnostics.OnValueChanged -= OnRecordDiagnosticsChanged;
+        _settingsHooksAttached = false;
     }
 
     // profile id shown to the user + used as the progress filename: "<Character> - <Class> - <League>",

@@ -37,6 +37,9 @@ public partial class ExileCampaigns
         var mapCenter = largeMap.MapCenter;
         var mapScale = largeMap.MapScale;
         float globalSize = Settings.MinimapIcons.IconSize.Value;   // per-icon Size overrides this when set
+        if (!IsFinite(playerGrid) || !float.IsFinite(playerHeight) || !IsFinite(mapCenter) ||
+            !double.IsFinite(mapScale) || mapScale <= 0 || !float.IsFinite(globalSize) || globalSize <= 0)
+            return;
 
         var currentId = _route.CurrentStep?.Model?.Id;   // icons of this step pulse
         // only the current step plus next N (same area) draw, so far-future steps don't clutter the map
@@ -89,6 +92,9 @@ public partial class ExileCampaigns
     private void DrawMinimapIcon(Vector2 gridCoord, SpriteIcon icon, uint tint, float size,
         Vector2 playerGrid, float playerHeight, Vector2 mapCenter, float mapScale)
     {
+        if (!IsFinite(gridCoord) || !IsFinite(playerGrid) || !float.IsFinite(playerHeight) ||
+            !IsFinite(mapCenter) || !float.IsFinite(mapScale) || !float.IsFinite(size) || size <= 0)
+            return;
         float z = 0f;
         var hd = _heightData;
         if (hd != null)
@@ -96,7 +102,9 @@ public partial class ExileCampaigns
             int gy = (int)gridCoord.Y, gx = (int)gridCoord.X;
             if (gy >= 0 && gy < hd.Length && gx >= 0 && gx < hd[gy].Length) z = hd[gy][gx];
         }
+        if (!float.IsFinite(z)) return;
         var screen = mapCenter + GridDeltaToMapDelta(gridCoord - playerGrid, playerHeight + z, mapScale);
+        if (!IsFinite(screen)) return;
         float half = size / 2f;
         var rect = new ExileCore2.Shared.RectangleF(screen.X - half, screen.Y - half, size, size);
         Graphics.DrawImage(IndicatorTexture, rect, SpriteAtlas.GetUVRect(icon), TintColor(tint));

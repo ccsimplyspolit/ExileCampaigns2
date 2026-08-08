@@ -94,16 +94,18 @@ public partial class ExileCampaigns
             var pos = e.Pos;                                   // world-space, at the feet
             var boundsZ = e.GetComponent<Render>()?.Bounds.Z ?? 0f;
             pos.Z -= boundsZ * 2f + Settings.InteractIndicator.HeightOffset.Value;  // lift above the head
+            if (!float.IsFinite(pos.X) || !float.IsFinite(pos.Y) || !float.IsFinite(pos.Z)) return;
             screen = GameController.IngameState.Camera.WorldToScreen(pos);
         }
         catch { return; }
-        if (screen == Vector2.Zero) return;                   // off-screen / behind camera
+        if (screen == Vector2.Zero || !IsFinite(screen)) return; // off-screen / behind camera
 
         // bob up/down so it reads as nudging at the object below it
         float t = (float)ImGui.GetTime();
         float bob = MathF.Sin(t * Settings.InteractIndicator.BobSpeed.Value) * Settings.InteractIndicator.BobDistance.Value;
 
         float size = Settings.InteractIndicator.IconSize.Value;
+        if (!float.IsFinite(bob) || !float.IsFinite(size) || size <= 0) return;
         float half = size / 2f;
         var col = Settings.InteractIndicator.IconColor.Value;
 
