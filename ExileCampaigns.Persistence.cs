@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using ExileCampaigns.Build;
 using ExileCampaigns.Guide;
 using Newtonsoft.Json.Linq;
@@ -20,7 +18,7 @@ public partial class ExileCampaigns
     private string LegacyProgressPath => Path.Combine(ConfigDirectory, "progress.json");
     private string ProgressPath => string.IsNullOrEmpty(_charName)
         ? LegacyProgressPath                                              // pre-login fallback
-        : Path.Combine(ProfilesDir, SanitizeProfile(_charName) + ".json");
+        : Path.Combine(ProfilesDir, ProfileNameSanitizer.Sanitize(_charName) + ".json");
 
     // switch active profile on character change. banks the outgoing one, then loads (or starts fresh) the
     // incoming one. no-op if name is unchanged/empty
@@ -147,41 +145,12 @@ public partial class ExileCampaigns
         try
         {
             Directory.CreateDirectory(ProfilesDir);
-            var path = Path.Combine(ProfilesDir, SanitizeProfile(name) + ".json");
+            var path = Path.Combine(ProfilesDir, ProfileNameSanitizer.Sanitize(name) + ".json");
             File.WriteAllText(path, new JObject { ["character"] = name, ["area"] = "", ["step"] = 0 }.ToString());
         }
         catch (Exception ex) { LogError($"ExileCampaigns -> reset progress failed: {ex.Message}"); }
     }
 
-    // Windows reserved device names: illegal as a filename stem even with an extension (e.g. "CON.json")
-    private static readonly HashSet<string> ReservedNames = new(StringComparer.OrdinalIgnoreCase)
-    {
-        "CON", "PRN", "AUX", "NUL",
-        "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9",
-        "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9",
-    };
-
-    // arbitrary name -> safe filename stem: invalid chars to '_', strip trailing dots/spaces (Windows
-    // drops them), cap length, dodge reserved device names
-    private static string SanitizeProfile(string name)
-    {
-        if (string.IsNullOrWhiteSpace(name)) return "_default";
-
-        var invalid = Path.GetInvalidFileNameChars();   // / \ : * ? " < > | and control chars
-        var sb = new StringBuilder(name.Length);
-        foreach (var c in name.Trim()) sb.Append(Array.IndexOf(invalid, c) >= 0 ? '_' : c);
-
-        var s = sb.ToString().TrimEnd('.', ' ');
-        if (s.Length > 80) s = s[..80].TrimEnd('.', ' ');
-        if (s.Length == 0) return "_default";
-
-        // reserved check is on the stem before any '.' (e.g. "CON.json" -> still reserved)
-        var stem = s;
-        var dot = stem.IndexOf('.');
-        if (dot >= 0) stem = stem[..dot];
-        if (ReservedNames.Contains(stem)) s = "_" + s;
-
-        return s;
-    }
+    private static string SanitizeProfile(string name) => ProfileNameSanitizer.Sanitize(name);
 
 }

@@ -10,6 +10,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="..\..\Guide\RouteModel.cs" Link="Guide\RouteModel.cs" />
     <Compile Include="..\..\Guide\RouteJson.cs" Link="Guide\RouteJson.cs" />
+    <Compile Include="..\..\ProfileNameSanitizer.cs" Link="ProfileNameSanitizer.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />

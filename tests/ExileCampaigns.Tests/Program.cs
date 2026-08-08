@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using ExileCampaigns;
 using ExileCampaigns.Guide;
 
 var tests = new (string Name, Action Body)[]
@@ -8,6 +9,7 @@ var tests = new (string Name, Action Body)[]
     ("legacy v1 tiles reconstruct guidance", LegacyV1TilesReconstructGuidance),
     ("malformed route fails closed", MalformedRouteFailsClosed),
     ("missing optional fields use safe defaults", MissingOptionalFieldsUseSafeDefaults),
+    ("profile names are safe Windows filename stems", ProfileNamesAreSafeWindowsStems),
 };
 
 var failures = 0;
@@ -88,6 +90,15 @@ static void MissingOptionalFieldsUseSafeDefaults()
     Assert(step.Act == 0 && step.AreaId == "" && !step.Optional, "step defaults");
     Assert(step.CompleteWhen == CompleteWhen.All, "completion default");
     Assert(step.Objectives[0].Type == ObjectiveType.Manual, "objective enum fallback");
+}
+
+static void ProfileNamesAreSafeWindowsStems()
+{
+    Assert(ProfileNameSanitizer.Sanitize("  Ranger: Fire?  ") == "Ranger_ Fire_", "invalid characters and trim");
+    Assert(ProfileNameSanitizer.Sanitize("CON") == "_CON", "reserved device name");
+    Assert(ProfileNameSanitizer.Sanitize("   ") == "_default", "empty fallback");
+    Assert(ProfileNameSanitizer.Sanitize("name... ") == "name", "trailing dots/spaces");
+    Assert(ProfileNameSanitizer.Sanitize(new string('x', 120)).Length == 80, "length cap");
 }
 
 static void Assert(bool condition, string message)
